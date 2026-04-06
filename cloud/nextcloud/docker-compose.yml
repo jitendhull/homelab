@@ -1,0 +1,76 @@
+services:
+  nextcloud-db:
+    image: mariadb:11.4
+    container_name: nextcloud-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-secure_root_pass}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-nextcloud}
+      MYSQL_USER: ${MYSQL_USER:-nextcloud}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-nextcloud_pass}
+    volumes:
+      - /home/ubuntu/nextcloud/db:/var/lib/mysql
+    networks:
+      - nextcloud-net
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    healthcheck:
+      test: ["CMD", "sh", "-c", "mariadb-admin -u root -p${MYSQL_ROOT_PASSWORD} ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nextcloud-redis:
+    image: redis:latest
+    container_name: nextcloud-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes
+      - /home/ubuntu/nextcloud/redis:/data
+    networks:
+      - nextcloud-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    depends_on:
+      nextcloud-db:
+        condition: service_healthy
+      nextcloud-redis:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: nextcloud-db
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-nextcloud}
+      MYSQL_USER: ${MYSQL_USER:-nextcloud}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-nextcloud_pass}
+      REDIS_HOST: nextcloud-redis
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER:-admin}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD:-admin123}
+      NEXTCLOUD_TRUSTED_DOMAINS: ${NEXTCLOUD_TRUSTED_DOMAINS:-localhost 127.0.0.1}
+      TRUSTED_PROXIES: 127.0.0.1
+      OVERWRITEPROTOCOL: https
+      OVERWRITECLIURL: https://nextcloud.jitendhull.tech
+      OVERWRITEHOST: nextcloud.jitendhull.tech
+      PHP_UPLOAD_LIMIT: 10G
+      PHP_MEMORY_LIMIT: 512M
+    volumes:
+      - /home/ubuntu/nextcloud/data:/var/www/html/data
+      - /home/ubuntu/nextcloud/html:/var/www/html
+    networks:
+      - nextcloud-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/status.php"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+networks:
+  nextcloud-net:
+    driver: bridge
