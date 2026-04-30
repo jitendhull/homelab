@@ -1,7 +1,7 @@
 services:
   netbird-client:
       container_name: netbird-client
-      hostname: main
+      hostname: <HOSTNAME>
       cap_add:
           - NET_ADMIN
           - SYS_ADMIN
@@ -11,9 +11,7 @@ services:
           - /dev/net/tun
       network_mode: host
       environment:
-          - NB_SETUP_KEY=A44A17C7-24C5-423F-98A7-28C079FB6957
-          - NB_MANAGEMENT_URL=https://netbird.jitendhull.tech
-          - NB_ADMIN_URL=https://netbird.jitendhull.tech
+          - NB_SETUP_KEY=<SETUP KEY>
       volumes:
           - netbird-client:/var/lib/netbird
       image: netbirdio/netbird:latest
