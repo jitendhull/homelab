@@ -1,0 +1,17 @@
+services:
+  firefox:
+    image: jlesage/firefox
+    container_name: firefox-web
+    ports:
+      - "5800:5800"   # Web UI (noVNC in browser)
+    volumes:
+      - ./config:/config
+      - ./downloads:/downloads
+    environment:
+      - TZ=Asia/Kolkata
+      - DISPLAY_WIDTH=1280
+      - DISPLAY_HEIGHT=800
+      - KEEP_APP_RUNNING=1
+      - CLEAN_TMP_DIR=1
+    shm_size: "1gb"
+    restart: unless-stopped
