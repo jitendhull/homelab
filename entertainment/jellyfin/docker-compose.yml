@@ -1,0 +1,13 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    network_mode: host        # Exposes directly on the host NIC — easiest for LAN discovery
+    environment:
+      - JELLYFIN_PublishedServerUrl=http://0.0.0.0:8096
+      - TZ=Asia/Kolkata
+    volumes:
+      - /home/ubuntu/media:/media                   # Your media library
+      - /home/ubuntu/jellyfin/config:/config         # Jellyfin config & DB
+      - /home/ubuntu/jellyfin/cache:/cache           # Transcoding cache
+    restart: unless-stopped
