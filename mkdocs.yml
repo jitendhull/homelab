@@ -1,0 +1,78 @@
+site_name: Homelab Wiki
+site_description: Complete guide to setting up and managing the homelab infrastructure
+repo_url: https://github.com/jitendhull/homelab
+repo_name: jitendhull/homelab
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/lightbulb
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search
+  - awesome-pages
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist
+  - pymdownx.emoji
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Overview: getting-started/overview.md
+    - Prerequisites: getting-started/prerequisites.md
+    - Initial Setup: getting-started/initial-setup.md
+  - Services:
+    - Cloud:
+      - Nextcloud: services/cloud/nextcloud.md
+      - Immich: services/cloud/immich.md
+    - Entertainment:
+      - Jellyfin: services/entertainment/jellyfin.md
+      - Music: services/entertainment/music.md
+    - Storage: services/storage/alist.md
+    - Security: services/security/vaultwarden.md
+    - Reverse Proxy: services/reverse-proxy/npm.md
+    - Docker Management:
+      - Portainer: services/docker-stuff/portainer.md
+      - Dockge: services/docker-stuff/dockge.md
+    - Game Servers:
+      - Pterodactyl Panel: services/pterodactyl/panel.md
+      - Pterodactyl Wings: services/pterodactyl/wings.md
+    - Tools:
+      - Firefox: services/tools/firefox.md
+  - Administration:
+    - Backup & Recovery: admin/backup-recovery.md
+    - Monitoring: admin/monitoring.md
+    - Networking: admin/networking.md
+    - Security Best Practices: admin/security.md
+  - Troubleshooting: troubleshooting.md
+  - FAQ: faq.md
